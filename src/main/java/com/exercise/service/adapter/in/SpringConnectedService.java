@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 import org.apache.commons.collections4.ListUtils;
 import org.slf4j.Logger;
@@ -82,29 +81,7 @@ public class SpringConnectedService implements ConnectedService {
 		boolean connected = !result.isEmpty();
 
 		if (connected) {
-			// Twitter followers checks are the most expensive operations.
-			Future<Boolean> dev2followsdev1 = twitterClient.isFollower(user1, user2);
-			Future<Boolean> dev1followsdev2 = twitterClient.isFollower(user2, user1);
-
-			while (!dev2followsdev1.isDone() && !dev1followsdev2.isDone()) {
-				Thread.sleep(50);
-			}
-			if (dev2followsdev1.isDone())
-				if (!dev2followsdev1.get()) {
-					// We can cancel the other check since we already know they are not connected
-					dev1followsdev2.cancel(true);
-					connected = false;
-				} else {
-					connected = dev1followsdev2.get();
-				}
-			else if (!dev1followsdev2.get()) {
-				// We can cancel the other check since we already know they are not connected
-				dev2followsdev1.cancel(true);
-				connected = false;
-			} else {
-				connected = dev2followsdev1.get();
-			}
-
+			connected = twitterClient.mutualFriends(user1, user2);
 		}
 
 		// dev1 and dev2 values stored with deterministic ordering

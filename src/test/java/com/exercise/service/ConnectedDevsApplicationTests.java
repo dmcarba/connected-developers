@@ -86,11 +86,9 @@ public class ConnectedDevsApplicationTests {
 	public void testRealTimeConnectedUsers() throws Exception {
 
 		Mockito.when(mockTwitterClient.exists(USER1)).thenReturn(CompletableFuture.completedFuture(true));
-		Mockito.when(mockTwitterClient.isFollower(USER1, USER2))
-				.thenReturn(CompletableFuture.completedFuture(true));
+		Mockito.when(mockTwitterClient.mutualFriends(USER1, USER2))
+				.thenReturn(true);
 		Mockito.when(mockTwitterClient.exists(USER2)).thenReturn(CompletableFuture.completedFuture(true));
-		Mockito.when(mockTwitterClient.isFollower(USER2, USER1))
-				.thenReturn(CompletableFuture.completedFuture(true));
 
 		Mockito.when(mockGitHubService.getUserOrgs(USER1)).thenReturn(CompletableFuture
 				.completedFuture(new GitHubUserOrganisationsDTO(new ArrayList<>(Arrays.asList(ORG1, ORG2)), true)));
@@ -108,11 +106,9 @@ public class ConnectedDevsApplicationTests {
 		List<RegistryInfoDTO> registries = connectedService.connectedRegistry(USER10, USER20);
 		assertTrue(registries.isEmpty());
 		Mockito.when(mockTwitterClient.exists(USER10)).thenReturn(CompletableFuture.completedFuture(true));
-		Mockito.when(mockTwitterClient.isFollower(USER10, USER20))
-				.thenReturn(CompletableFuture.completedFuture(true));
-		Mockito.when(mockTwitterClient.exists(USER20)).thenReturn(CompletableFuture.completedFuture(true));
-		Mockito.when(mockTwitterClient.isFollower(USER20, USER10))
-				.thenReturn(CompletableFuture.completedFuture(true));
+		Mockito.when(mockTwitterClient.mutualFriends(USER10, USER20))
+				.thenReturn(true);
+		Mockito.when(mockTwitterClient.exists(USER20)).thenReturn(CompletableFuture.completedFuture(true));;
 		Mockito.when(mockGitHubService.getUserOrgs(USER10)).thenReturn(CompletableFuture
 				.completedFuture(new GitHubUserOrganisationsDTO(new ArrayList<>(Arrays.asList(ORG1, ORG2)), true)));
 		Mockito.when(mockGitHubService.getUserOrgs(USER20)).thenReturn(CompletableFuture
