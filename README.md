@@ -1,6 +1,6 @@
 ## Instructions
 
-Clone the project and build it with mvn install.
+Clone the project and build it with mvn install. Tests are run as part of the building process.
 
 Start the mongodb instance running the docker compose file under src/main/resources:
 "docker-compose up"
